@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+
+  "name": "Drift",
+  "description": "Become more productive",
+  "version": "1.0",
+
+  "default_locale": "en",
+  "author": "Alex Chan",
+  "background": {
+    "persistent": false
+  },
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html",
+    "default_title": "Drift"
+  },
+  "permissions": [
+    "activeTab",
+    "https://ajax.googleapis.com/"
+  ]
+}
