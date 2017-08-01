@@ -15,13 +15,23 @@ function getCurrentTabUrl(callback) {
   });
 }
 
+
 document.addEventListener("DOMContentLoaded", function(){
   console.log("Loaded content");
+  chrome.runtime.onMessage.addListener(
+      function(request, sender, sendResponse) {
+          if (request.msg === "bg") {
+              console.log(data);
+          }
+      }
+  );
+
+
   var url;
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     var tab = tabs[0];
     url = tab.url;
-    console.log(url);
+    // console.log(url);
   });
 
   var t = document.getElementById("track");

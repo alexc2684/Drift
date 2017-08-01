@@ -26,6 +26,10 @@ function save_options() {
   var status = document.getElementById('status');
   status.textContent = 'Options saved.';
 
+  chrome.extension.sendMessage({urls: links}, function(response) {
+    console.log(response);
+  });
+
   chrome.storage.sync.set({
     urls: links
   }, function() {
