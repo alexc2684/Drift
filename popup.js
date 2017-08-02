@@ -18,14 +18,18 @@ function getCurrentTabUrl(callback) {
 
 document.addEventListener("DOMContentLoaded", function(){
   console.log("Loaded content");
-  chrome.runtime.onMessage.addListener(
-      function(request, sender, sendResponse) {
-          if (request.msg === "bg") {
-              console.log(data);
-          }
-      }
-  );
 
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    var tab = tabs[0];
+    url = tab.url;
+    //parse url for matching
+    var parser = document.createElement('a');
+    parser.href = url;
+    url = parser.hostname;
+    chrome.runtime.sendMessage({msg: "currLink", data: url}, function(response) {
+      console.log(response);
+    });
+  });
 
   var url;
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {

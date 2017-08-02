@@ -26,7 +26,7 @@ function save_options() {
   var status = document.getElementById('status');
   status.textContent = 'Options saved.';
 
-  chrome.extension.sendMessage({urls: links}, function(response) {
+  chrome.extension.sendMessage({msg: "toTrack", urls: links}, function(response) {
     console.log(response);
   });
 

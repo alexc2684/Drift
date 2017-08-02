@@ -2,15 +2,18 @@
 //on DOM loaded: if website in list
 //add count
 
-chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-  var tab = tabs[0];
-  url = tab.url;
-  //parse url for matching
-  first = url.indexOf(".") + 1;
-  temp = url.slice(first, url.length);
-  sec = temp.indexOf(".");
-  url = url.slice(first, sec);
-  chrome.runtime.sendMessage({data: url}, function(response) {
-    console.log(response);
+document.addEventListener("DOMContentLoaded", function(){
+
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    var tab = tabs[0];
+    url = tab.url;
+    //parse url for matching
+    var parser = document.createElement('a');
+    parser.href = url;
+    url = parser.hostname;
+    chrome.runtime.sendMessage({msg: "currLink", data: url}, function(response) {
+      console.log(response);
+    });
   });
+
 });
