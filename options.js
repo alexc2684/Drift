@@ -1,5 +1,7 @@
 //upon list add, begin tracking
 
+var storedid;
+
 function removeName(itemid){
     var item = document.getElementById(itemid);
     list.removeChild(item);
@@ -9,7 +11,10 @@ document.addEventListener("DOMContentLoaded", function(){
   var listid;
   restore_options();
   if (!listid) {
+    listid = storedid;
+  } else {
     listid = 0;
+    storedid = listid;
   }
   document.getElementById('save').addEventListener('click', save_options);
 
@@ -27,11 +32,9 @@ document.addEventListener("DOMContentLoaded", function(){
       removeButton.appendChild(document.createTextNode("remove"));
       removeButton.setAttribute("id", listid);
       removeButton.className = "remove";
-      console.log(removeButton.className);
-      //addevent listener
-      //set id to the id of the button - then do 'item'+id to getrid
       li.appendChild(removeButton);
       listid += 1;
+      storedid = listid;
       document.getElementById("urlList").appendChild(li);
     }
   });
@@ -40,7 +43,6 @@ document.addEventListener("DOMContentLoaded", function(){
     if (e.target.className == 'remove') {
       itemid = "url" + e.target.id;
       var item = document.getElementById(itemid);
-      console.log(itemid);
       document.getElementById("urlList").removeChild(item);
     }
   })
@@ -51,6 +53,8 @@ function save_options() {
   var ul = document.getElementById("urlList");
   var items = ul.getElementsByTagName("li");
   var links = []
+  //make links a dictionary
+  //store the ids for list elements also
   for (var i = 0; i < items.length; i++) {
     links.push(items[i].innerHTML);
   }
@@ -63,7 +67,7 @@ function save_options() {
 
   chrome.storage.sync.set({
     urls: links,
-    lastid: listid
+    lastid: storedid
   }, function() {
     var status = document.getElementById("status");
     status.textContent = "Options Saved";
@@ -74,11 +78,12 @@ function save_options() {
 
 function restore_options() {
   chrome.storage.sync.get({
-    urls: []
+    urls: [],
+    lastid: 0
   }, function(items) {
-    // listid = lastid;
+    storedid = items.lastid;
     for (var i = 0; i < items.urls.length; i++) {
-      var li = document.createElement("LI");
+      var li = document.createElement("li");
       li.innerHTML = items.urls[i];
       document.getElementById("urlList").appendChild(li);
       console.log(items.urls[i]);
