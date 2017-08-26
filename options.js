@@ -1,5 +1,3 @@
-//upon list add, begin tracking
-
 var storedid;
 restore_options();
 
@@ -60,8 +58,6 @@ function save_options() {
   var items = document.querySelectorAll("ul.list-group li");
   console.log(items);
   var links = {}
-  //TODO: make links an object
-  //TODO: store name: and id:, reconstruct the HTML on restore
   for (var i = 0; i < items.length; i++) {
     elem = items[i].innerHTML;
     index = elem.indexOf("<");
@@ -98,9 +94,7 @@ function restore_options() {
     for (var i = 0; i < Object.keys(items.urls).length; i++) {
       console.log(items.urls[i]);
       url = items.urls[i];
-      // li.innerHTML = items.urls[i];
       var li = document.createElement("li");
-      // li.className += "list-group-item";
       li.innerHTML = url;
       li.setAttribute("id", "url" + i);
       var removeButton = document.createElement('button');
