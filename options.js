@@ -1,6 +1,7 @@
 //upon list add, begin tracking
 
 var storedid;
+restore_options();
 
 function removeName(itemid){
     var item = document.getElementById(itemid);
@@ -9,8 +10,7 @@ function removeName(itemid){
 
 document.addEventListener("DOMContentLoaded", function(){
   var listid;
-  restore_options();
-  if (!listid) {
+  if (storedid) {
     listid = storedid;
   } else {
     listid = 0;
@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function(){
       li.appendChild(removeButton);
       listid += 1;
       storedid = listid;
+      console.log(li.innerHTML);
       document.getElementById("urlList").appendChild(li);
     }
   });
@@ -44,6 +45,8 @@ document.addEventListener("DOMContentLoaded", function(){
       itemid = "url" + e.target.id;
       var item = document.getElementById(itemid);
       document.getElementById("urlList").removeChild(item);
+      storedid--;
+      listid--;
     }
   })
 
@@ -51,20 +54,27 @@ document.addEventListener("DOMContentLoaded", function(){
 
 function save_options() {
   var ul = document.getElementById("urlList");
-  var items = ul.getElementsByTagName("li");
-  var links = []
-  //make links a dictionary
-  //store the ids for list elements also
+  console.log("ul");
+  console.log(ul);
+  console.log(ul.getElementsByTagName("li"));
+  var items = document.querySelectorAll("ul.list-group li");
+  console.log(items);
+  var links = {}
+  //TODO: make links an object
+  //TODO: store name: and id:, reconstruct the HTML on restore
   for (var i = 0; i < items.length; i++) {
-    links.push(items[i].innerHTML);
+    elem = items[i].innerHTML;
+    index = elem.indexOf("<");
+    url = elem.substring(0, index);
+    links[i] = url;
   }
   var status = document.getElementById('status');
   status.textContent = 'Options saved.';
 
   chrome.extension.sendMessage({msg: "toTrack", urls: links}, function(response) {
-    console.log(response);
+    // console.log(response);
   });
-
+  console.log(links);
   chrome.storage.sync.set({
     urls: links,
     lastid: storedid
@@ -82,11 +92,24 @@ function restore_options() {
     lastid: 0
   }, function(items) {
     storedid = items.lastid;
-    for (var i = 0; i < items.urls.length; i++) {
-      var li = document.createElement("li");
-      li.innerHTML = items.urls[i];
-      document.getElementById("urlList").appendChild(li);
+    console.log(items.urls);
+    console.log(items.lastid);
+    console.log(Object.keys(items.urls).length);
+    for (var i = 0; i < Object.keys(items.urls).length; i++) {
       console.log(items.urls[i]);
+      url = items.urls[i];
+      // li.innerHTML = items.urls[i];
+      var li = document.createElement("li");
+      // li.className += "list-group-item";
+      li.innerHTML = url;
+      li.setAttribute("id", "url" + i);
+      var removeButton = document.createElement('button');
+      removeButton.appendChild(document.createTextNode("remove"));
+      removeButton.setAttribute("id", i);
+      removeButton.className = "remove";
+      li.appendChild(removeButton);
+      console.log(li);
+      document.getElementById("urlList").appendChild(li);
     }
   });
 }
