@@ -6,6 +6,14 @@ function removeName(itemid){
     list.removeChild(item);
 }
 
+function validateUrl(userInput) {
+    var res = userInput.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    if(res == null)
+        return false;
+    else
+        return true;
+}
+
 document.addEventListener("DOMContentLoaded", function(){
   var listid;
   if (storedid) {
@@ -20,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function(){
   addInput.addEventListener("click", function() {
     var input = document.getElementById("url");
     var url = input.value;
-    if (url.indexOf("www.") != -1) { //TODO: Better url checking
+    if (validateUrl(url)) { //TODO: Better url checking
       var li = document.createElement("li");
       // li.className += "list-group-item";
       li.innerHTML = url;
@@ -33,7 +41,6 @@ document.addEventListener("DOMContentLoaded", function(){
       li.appendChild(removeButton);
       listid += 1;
       storedid = listid;
-      console.log(li.innerHTML);
       document.getElementById("urlList").appendChild(li);
     }
   });
@@ -52,11 +59,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 function save_options() {
   var ul = document.getElementById("urlList");
-  console.log("ul");
-  console.log(ul);
-  console.log(ul.getElementsByTagName("li"));
   var items = document.querySelectorAll("ul.list-group li");
-  console.log(items);
   var links = {}
   for (var i = 0; i < items.length; i++) {
     elem = items[i].innerHTML;
@@ -68,9 +71,8 @@ function save_options() {
   status.textContent = 'Options saved.';
 
   chrome.extension.sendMessage({msg: "toTrack", urls: links}, function(response) {
-    // console.log(response);
+    console.log(response);
   });
-  console.log(links);
   chrome.storage.sync.set({
     urls: links,
     lastid: storedid
@@ -88,11 +90,7 @@ function restore_options() {
     lastid: 0
   }, function(items) {
     storedid = items.lastid;
-    console.log(items.urls);
-    console.log(items.lastid);
-    console.log(Object.keys(items.urls).length);
     for (var i = 0; i < Object.keys(items.urls).length; i++) {
-      console.log(items.urls[i]);
       url = items.urls[i];
       var li = document.createElement("li");
       li.innerHTML = url;
@@ -102,7 +100,6 @@ function restore_options() {
       removeButton.setAttribute("id", i);
       removeButton.className = "remove";
       li.appendChild(removeButton);
-      console.log(li);
       document.getElementById("urlList").appendChild(li);
     }
   });
