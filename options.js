@@ -29,19 +29,23 @@ document.addEventListener("DOMContentLoaded", function(){
     var input = document.getElementById("url");
     var url = input.value;
     if (validateUrl(url)) { //TODO: Better url checking
-      var li = document.createElement("li");
-      // li.className += "list-group-item";
-      li.innerHTML = url;
       input.value = "";
-      li.setAttribute("id", "url" + listid);
+      var tr = document.createElement("tr");
+      tr.setAttribute("id", "url" + listid);
+      tr.setAttribute("class", "body");
+      var td1 = document.createElement("td");
+      td1.innerHTML = url;
+      var td2 = document.createElement("td");
       var removeButton = document.createElement('button');
       removeButton.appendChild(document.createTextNode("remove"));
       removeButton.setAttribute("id", listid);
       removeButton.className = "remove";
-      li.appendChild(removeButton);
+      td2.appendChild(removeButton);
+      tr.appendChild(td1);
+      tr.appendChild(td2);
       listid += 1;
       storedid = listid;
-      document.getElementById("urlList").appendChild(li);
+      document.getElementById("urlList").appendChild(tr);
     }
   });
 
@@ -59,14 +63,19 @@ document.addEventListener("DOMContentLoaded", function(){
 
 function save_options() {
   var ul = document.getElementById("urlList");
-  var items = document.querySelectorAll("ul.list-group li");
+  var items = document.querySelectorAll(".body");
   var links = {}
   for (var i = 0; i < items.length; i++) {
     elem = items[i].innerHTML;
-    index = elem.indexOf("<");
-    url = elem.substring(0, index);
+    i1 = elem.indexOf(">") + 1;
+    temp = elem.substring(i1, elem.length);
+    console.log(temp);
+    i2 = temp.indexOf("<");
+    url = temp.substring(0, i2);
     links[i] = url;
   }
+  console.log(links);
+
   var status = document.getElementById('status');
   status.textContent = 'Options saved.';
 
@@ -92,15 +101,24 @@ function restore_options() {
     storedid = items.lastid;
     for (var i = 0; i < Object.keys(items.urls).length; i++) {
       url = items.urls[i];
-      var li = document.createElement("li");
-      li.innerHTML = url;
-      li.setAttribute("id", "url" + i);
+      var tr = document.createElement("tr");
+      tr.setAttribute("id", "url" + i);
+      tr.setAttribute("class", "body");
+      var td1 = document.createElement("td");
+      td1.innerHTML = url;
+      var td2 = document.createElement("td");
       var removeButton = document.createElement('button');
       removeButton.appendChild(document.createTextNode("remove"));
       removeButton.setAttribute("id", i);
       removeButton.className = "remove";
-      li.appendChild(removeButton);
-      document.getElementById("urlList").appendChild(li);
+      td2.appendChild(removeButton);
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      document.getElementById("urlList").appendChild(tr);
     }
+    var tbl = document.getElementById("sites");
+    tbl.className += " table-hover";
+    var thead = document.getElementById("head");
+    thead.className += " blue-grey lighten-4";
   });
 }

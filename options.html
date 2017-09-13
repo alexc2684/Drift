@@ -15,9 +15,21 @@
     <input type='text' id='url'/>
     <input type='button' value='Add' id='addSite'>
     <h2>Tracked Sites</h2>
-    <ul id='urlList' class="list-group">
-    </ul>
+    <div class="table-responsive">
+      <table id="sites" class="table">
+        <thead id="head">
+          <th>
+            Site
+          </th>
+          <th>
 
+          </th>
+        </thead>
+        <tbody id='urlList'>
+
+        </tbody>
+      </table>
+    </div>
     <div id ='status'></div><br />
     <button id='save'>Save</button>
   </body>
