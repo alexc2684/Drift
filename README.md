@@ -9,7 +9,5 @@ Drift helps train you to become more productive through a gradual process. It wo
 
 You can select the sites you want to add to your list in the "options" page, located under "More Tools" > "Extensions". Then, when you are ready to start tracking, click the extension icon on the top right of your browser; you will see a timer showing you how much time you have left on the selected page.
 
-Chrome Web Store link:
-https://chrome.google.com/webstore/detail/drift/kfoicdnbdcipdcobikaoaoehecdjocld
 
 Icon designed by Rosa Choe
